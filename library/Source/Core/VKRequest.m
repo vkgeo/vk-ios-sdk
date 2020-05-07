@@ -451,7 +451,13 @@ void vksdk_dispatch_on_main_queue_now(void(^block)(void)) {
 }
 
 - (void)cancel {
-    self.executionOperation.completionBlock = nil;
+    //
+    // ad-hoc fix: immediately after this assignment, ARC decides that
+    // refcount for self becomes 0 and calls dealloc, so comment it out
+    // for now
+    //
+    // self.executionOperation.completionBlock = nil;
+    //
     [self.executionOperation cancel];
     self.executionOperation = nil;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
